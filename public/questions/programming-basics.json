@@ -1,0 +1,122 @@
+{
+  "meta": {
+    "title": "Programming Basics",
+    "category": "Coding",
+    "difficulty": "easy",
+    "timePerQuestion": 15,
+    "totalLives": 3,
+    "version": "1.0"
+  },
+  "questions": [
+    {
+      "id": "pb1",
+      "question": "What does HTML stand for?",
+      "options": [
+        "HyperText Markup Language",
+        "HighText Machine Language",
+        "HyperText and Links",
+        "Home Tool Markup Language"
+      ],
+      "answer": "HyperText Markup Language",
+      "topic": "Web Basics",
+      "points": 10,
+      "explanation": "HTML stands for HyperText Markup Language — the standard language for creating web pages."
+    },
+    {
+      "id": "pb2",
+      "question": "Which data structure works on the LIFO principle?",
+      "options": ["Queue", "Stack", "Array", "Linked List"],
+      "answer": "Stack",
+      "topic": "Data Structures",
+      "points": 10,
+      "explanation": "Stack follows Last In, First Out (LIFO). The last element pushed is the first to be popped."
+    },
+    {
+      "id": "pb3",
+      "question": "What is the time complexity of binary search?",
+      "options": ["O(n)", "O(n²)", "O(log n)", "O(1)"],
+      "answer": "O(log n)",
+      "topic": "Algorithms",
+      "points": 15,
+      "explanation": "Binary search halves the search space each step, giving O(log n) time complexity."
+    },
+    {
+      "id": "pb4",
+      "question": "Which keyword is used to create a class in Python?",
+      "options": ["def", "class", "object", "struct"],
+      "answer": "class",
+      "topic": "Python",
+      "points": 10,
+      "explanation": "In Python, the 'class' keyword is used to define a class. Example: class MyClass:"
+    },
+    {
+      "id": "pb5",
+      "question": "What does SQL stand for?",
+      "options": [
+        "Structured Query Language",
+        "Simple Question Language",
+        "Sequential Query Logic",
+        "Standard Query List"
+      ],
+      "answer": "Structured Query Language",
+      "topic": "Databases",
+      "points": 10,
+      "explanation": "SQL stands for Structured Query Language, used to manage and query relational databases."
+    },
+    {
+      "id": "pb6",
+      "question": "Which of these is NOT a JavaScript primitive type?",
+      "options": ["string", "boolean", "array", "undefined"],
+      "answer": "array",
+      "topic": "JavaScript",
+      "points": 15,
+      "explanation": "Arrays are objects in JavaScript, not primitives. Primitives include string, number, boolean, null, undefined, symbol, bigint."
+    },
+    {
+      "id": "pb7",
+      "question": "What does 'git clone' do?",
+      "options": [
+        "Creates a new branch",
+        "Copies a remote repository locally",
+        "Merges two branches",
+        "Commits staged changes"
+      ],
+      "answer": "Copies a remote repository locally",
+      "topic": "Git",
+      "points": 10,
+      "explanation": "'git clone' downloads a copy of a remote repository to your local machine."
+    },
+    {
+      "id": "pb8",
+      "question": "In OOP, what is encapsulation?",
+      "options": [
+        "Hiding data and bundling it with methods",
+        "Inheriting from a parent class",
+        "Overriding a method",
+        "Creating multiple objects"
+      ],
+      "answer": "Hiding data and bundling it with methods",
+      "topic": "OOP",
+      "points": 15,
+      "explanation": "Encapsulation is the practice of bundling data and the methods that operate on it inside a class, hiding internal details."
+    },
+    {
+      "id": "pb9",
+      "question": "What HTTP status code means 'Not Found'?",
+      "options": ["200", "301", "404", "500"],
+      "answer": "404",
+      "topic": "Web Basics",
+      "points": 10,
+      "explanation": "HTTP 404 means the requested resource was not found on the server. 200 = OK, 301 = Redirect, 500 = Server Error."
+    },
+    {
+      "id": "pb10",
+      "question": "Which sorting algorithm has the best average-case time complexity?",
+      "options": ["Bubble Sort", "Selection Sort", "Merge Sort", "Insertion Sort"],
+      "answer": "Merge Sort",
+      "topic": "Algorithms",
+      "points": 15,
+      "explanation": "Merge Sort runs in O(n log n) in all cases. Bubble, Selection, and Insertion Sort are O(n²) on average."
+    }
+  ]
+}

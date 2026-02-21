@@ -1,0 +1,102 @@
+{
+  "meta": {
+    "title": "Aptitude Week 1",
+    "category": "Aptitude",
+    "difficulty": "medium",
+    "timePerQuestion": 15,
+    "totalLives": 3,
+    "version": "1.0"
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "question": "If 20% of a number is 80, what is the number?",
+      "options": ["300", "400", "500", "600"],
+      "answer": "400",
+      "topic": "Percentages",
+      "points": 10,
+      "explanation": "20% of x = 80 → x = 80 ÷ 0.2 = 400"
+    },
+    {
+      "id": "q2",
+      "question": "A train travels 360 km in 4 hours. What is its speed in km/h?",
+      "options": ["80", "90", "100", "120"],
+      "answer": "90",
+      "topic": "Speed & Distance",
+      "points": 10,
+      "explanation": "Speed = Distance ÷ Time = 360 ÷ 4 = 90 km/h"
+    },
+    {
+      "id": "q3",
+      "question": "What is the LCM of 12 and 18?",
+      "options": ["24", "36", "48", "72"],
+      "answer": "36",
+      "topic": "LCM & HCF",
+      "points": 10,
+      "explanation": "LCM(12, 18) = 36. Factors: 12 = 2²×3, 18 = 2×3². LCM = 2²×3² = 36."
+    },
+    {
+      "id": "q4",
+      "question": "A shopkeeper marks a price 25% above cost and gives a 10% discount. Profit %?",
+      "options": ["12%", "12.5%", "15%", "10%"],
+      "answer": "12.5%",
+      "topic": "Profit & Loss",
+      "points": 15,
+      "explanation": "SP = 1.25C × 0.9 = 1.125C. Profit = 12.5%."
+    },
+    {
+      "id": "q5",
+      "question": "How many 3-digit numbers are divisible by 7?",
+      "options": ["126", "127", "128", "129"],
+      "answer": "128",
+      "topic": "Divisibility",
+      "points": 15,
+      "explanation": "First 3-digit multiple of 7 is 105, last is 994. Count = (994-105)/7 + 1 = 128."
+    },
+    {
+      "id": "q6",
+      "question": "If A : B = 2 : 3 and B : C = 4 : 5, what is A : C?",
+      "options": ["6:10", "8:15", "4:9", "2:5"],
+      "answer": "8:15",
+      "topic": "Ratios",
+      "points": 10,
+      "explanation": "A:B = 2:3, B:C = 4:5 → A:B:C = 8:12:15. A:C = 8:15."
+    },
+    {
+      "id": "q7",
+      "question": "Simple interest on ₹5000 at 8% per annum for 3 years is?",
+      "options": ["₹1000", "₹1200", "₹1500", "₹800"],
+      "answer": "₹1200",
+      "topic": "Simple Interest",
+      "points": 10,
+      "explanation": "SI = P×R×T/100 = 5000×8×3/100 = ₹1200."
+    },
+    {
+      "id": "q8",
+      "question": "A pipe fills a tank in 6 hours and another empties it in 9 hours. Net fill time if both open?",
+      "options": ["12 hrs", "15 hrs", "18 hrs", "20 hrs"],
+      "answer": "18 hrs",
+      "topic": "Pipes & Cisterns",
+      "points": 15,
+      "explanation": "Net rate = 1/6 - 1/9 = 1/18. So tank fills in 18 hrs."
+    },
+    {
+      "id": "q9",
+      "question": "The average of 5 consecutive even numbers is 14. What is the largest?",
+      "options": ["16", "18", "20", "22"],
+      "answer": "18",
+      "topic": "Averages",
+      "points": 10,
+      "explanation": "Middle number = 14. Consecutive evens: 10,12,14,16,18. Largest = 18."
+    },
+    {
+      "id": "q10",
+      "question": "In how many ways can 4 people be arranged in a row?",
+      "options": ["12", "16", "24", "48"],
+      "answer": "24",
+      "topic": "Permutations",
+      "points": 10,
+      "explanation": "4! = 4 × 3 × 2 × 1 = 24."
+    }
+  ]
+}
