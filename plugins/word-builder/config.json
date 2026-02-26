@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "gameId": "word-builder",
+    "gameType": "word",
+    "title": "WordBuilder",
+    "description": "Form words from the tiles. Longer words score more.",
+    "difficulty": "medium",
+    "timeLimit": 90,
+    "lives": 3,
+    "version": "1.0"
+  },
+  "config": {
+    "rounds": [
+      {
+        "id": "r1",
+        "letters": ["P", "L", "A", "N", "E", "T", "S", "O", "R", "A", "T"],
+        "minWordLength": 3,
+        "pointsPerLetter": 5,
+        "bonusWords": ["PLANET", "PLANTS", "PATROL", "LEARNS"],
+        "bonusMultiplier": 2
+      },
+      {
+        "id": "r2",
+        "letters": ["C", "R", "E", "A", "T", "I", "O", "N", "S", "K", "L"],
+        "minWordLength": 3,
+        "pointsPerLetter": 5,
+        "bonusWords": ["CREATION", "INTERACT", "ROCKET", "SONIC"],
+        "bonusMultiplier": 2
+      },
+      {
+        "id": "r3",
+        "letters": ["B", "U", "I", "L", "D", "E", "R", "S", "T", "A", "M"],
+        "minWordLength": 3,
+        "pointsPerLetter": 6,
+        "bonusWords": ["BUILDERS", "MASTER", "TRIBES", "STABLED"],
+        "bonusMultiplier": 2
+      }
+    ]
+  }
+}

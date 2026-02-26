@@ -1,23 +1,23 @@
 "use client";
 import { useState, useEffect } from "react";
-import { subscribeToLeaderboard } from "../lib/firestoreHelpers";
+import { subscribeToGameLeaderboard } from "../lib/firestoreHelpers";
 
 /**
- * Real-time leaderboard hook.
- * Subscribes to Firestore onSnapshot for the given room.
+ * Real-time leaderboard hook for the plugin engine.
+ * Subscribes to /leaderboard/{gameId}/scores ordered by score desc.
  */
-export function useLeaderboard(roomId) {
+export function useLeaderboard(gameId) {
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!roomId) return;
-    const unsub = subscribeToLeaderboard(roomId, (data) => {
+    if (!gameId) return;
+    const unsub = subscribeToGameLeaderboard(gameId, (data) => {
       setPlayers(data);
       setLoading(false);
     });
     return unsub;
-  }, [roomId]);
+  }, [gameId]);
 
   return { players, loading };
 }

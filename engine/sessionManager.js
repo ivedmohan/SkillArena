@@ -1,39 +1,27 @@
-import { GAME_CONFIG } from "../constants/gameConfig";
-
 /**
- * Creates a fresh player session state object.
+ * SessionManager.js — Player session state for a single game run.
  */
-export function createSession(playerId, name, totalLives) {
+
+export function createSession(playerName, gameId, gameMeta) {
   return {
-    playerId,
-    name,
+    playerName,
+    gameId,
     score: 0,
-    lives: totalLives ?? GAME_CONFIG.DEFAULT_LIVES,
-    combo: 1,        // starts at 1 (no multiplier yet); becomes 2 after first correct
-    answeredQuestions: [],
-    weakTopics: {},
-    joinedAt: Date.now(),
+    lives: gameMeta.lives ?? 3,
+    streak: 0,
+    multiplier: 1.0,
+    lastPointsEarned: 0,
+    startedAt: Date.now(),
+    completedAt: null,
+    timeTaken: 0,
   };
 }
 
-/**
- * Merges a state delta (returned by processAnswer) into the current session.
- * Returns a new session object — does not mutate.
- */
-export function applyDelta(session, delta) {
-  return { ...session, ...delta };
-}
-
-/**
- * Serialises a session to a plain object safe for Firestore writes.
- */
-export function serialiseSession(session) {
+export function finalizeSession(session) {
+  const now = Date.now();
   return {
-    name: session.name,
-    score: session.score,
-    lives: session.lives,
-    combo: session.combo,
-    answeredQuestions: session.answeredQuestions,
-    weakTopics: session.weakTopics,
+    ...session,
+    completedAt: now,
+    timeTaken: Math.round((now - session.startedAt) / 1000),
   };
 }
