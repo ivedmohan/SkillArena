@@ -1,0 +1,187 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://skillarena.dev/schemas/game-config.json",
+  "title": "SkillArena Game Config",
+  "description": "JSON configuration schema for any SkillArena plugin game",
+  "type": "object",
+  "required": ["meta", "config"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "description": "Universal game metadata — identical required fields for every game type",
+      "required": ["gameId", "gameType", "title", "lives", "version"],
+      "properties": {
+        "gameId": {
+          "type": "string",
+          "description": "Unique slug for this game. Must match the plugin folder name.",
+          "pattern": "^[a-z0-9-]+$",
+          "examples": ["aptitude-blitz", "word-builder", "sudoku", "logic-gates"]
+        },
+        "gameType": {
+          "type": "string",
+          "description": "Declares the game category. Used for filtering/UI labelling.",
+          "enum": ["grid", "word", "mcq", "logic"],
+          "examples": ["mcq"]
+        },
+        "title": {
+          "type": "string",
+          "description": "Display name shown in the game shell header and results page.",
+          "examples": ["AptitudeBlitz"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Short description shown on the landing game card."
+        },
+        "difficulty": {
+          "type": "string",
+          "description": "Default difficulty level. Overridable by the player at game start.",
+          "enum": ["easy", "medium", "hard"],
+          "default": "medium"
+        },
+        "timeLimit": {
+          "type": "integer",
+          "description": "Total game time in seconds. Used by the GameShell countdown timer.",
+          "minimum": 10,
+          "examples": [120, 180, 300]
+        },
+        "timePerQuestion": {
+          "type": "integer",
+          "description": "Per-question timer in seconds. Only used by MCQ-type games.",
+          "minimum": 5,
+          "examples": [15]
+        },
+        "lives": {
+          "type": "integer",
+          "description": "Number of lives the player starts with.",
+          "minimum": 1,
+          "default": 3
+        },
+        "version": {
+          "type": "string",
+          "description": "Config version for cache-busting and admin tracking.",
+          "pattern": "^[0-9]+\\.[0-9]+$",
+          "examples": ["1.0", "2.1"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "config": {
+      "type": "object",
+      "description": "Game-specific data payload. Schema varies by gameType. The engine never reads this — only the plugin reads it.",
+      "oneOf": [
+        {
+          "title": "MCQ Config (gameType: mcq)",
+          "description": "Used by AptitudeBlitz and any MCQ-based plugin",
+          "required": ["questions"],
+          "properties": {
+            "questions": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["id", "question", "options", "answer", "topic", "points"],
+                "properties": {
+                  "id":          { "type": "string" },
+                  "question":    { "type": "string" },
+                  "options":     { "type": "array", "items": { "type": "string" }, "minItems": 2, "maxItems": 6 },
+                  "answer":      { "type": "string", "description": "Must exactly match one value in options[]" },
+                  "topic":       { "type": "string", "description": "Used for analytics grouping" },
+                  "points":      { "type": "integer", "minimum": 1 },
+                  "explanation": { "type": "string", "description": "Shown after answer reveal" }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        {
+          "title": "Word Config (gameType: word)",
+          "description": "Used by WordBuilder and any word-formation plugin",
+          "required": ["rounds"],
+          "properties": {
+            "rounds": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["id", "letters", "minWordLength", "pointsPerLetter"],
+                "properties": {
+                  "id":              { "type": "string" },
+                  "letters":         { "type": "array", "items": { "type": "string", "maxLength": 1 } },
+                  "minWordLength":   { "type": "integer", "minimum": 2 },
+                  "pointsPerLetter": { "type": "integer", "minimum": 1 },
+                  "bonusWords":      { "type": "array", "items": { "type": "string" } },
+                  "bonusMultiplier": { "type": "number", "minimum": 1 }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        {
+          "title": "Grid Config (gameType: grid)",
+          "description": "Used by SudokuBlitz and any grid-based plugin",
+          "required": ["puzzles"],
+          "properties": {
+            "puzzles": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["id", "difficulty", "grid", "solution", "pointsPerCell"],
+                "properties": {
+                  "id":           { "type": "string" },
+                  "difficulty":   { "type": "string", "enum": ["easy", "medium", "hard"] },
+                  "timeLimit":    { "type": "integer", "description": "Overrides meta.timeLimit for this specific difficulty" },
+                  "pointsPerCell":{ "type": "integer", "minimum": 1 },
+                  "grid":         {
+                    "type": "array",
+                    "description": "9x9 array. 0 = empty cell for player to fill.",
+                    "items": { "type": "array", "items": { "type": "integer", "minimum": 0, "maximum": 9 }, "minItems": 9, "maxItems": 9 },
+                    "minItems": 9, "maxItems": 9
+                  },
+                  "solution":     {
+                    "type": "array",
+                    "description": "Complete solved 9x9 grid. Used for answer validation.",
+                    "items": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 9 }, "minItems": 9, "maxItems": 9 },
+                    "minItems": 9, "maxItems": 9
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "meta": {
+        "gameId": "aptitude-blitz",
+        "gameType": "mcq",
+        "title": "AptitudeBlitz",
+        "description": "10 aptitude questions. Beat the clock.",
+        "difficulty": "medium",
+        "timeLimit": 150,
+        "timePerQuestion": 15,
+        "lives": 3,
+        "version": "1.0"
+      },
+      "config": {
+        "questions": [
+          {
+            "id": "q1",
+            "question": "If 20% of a number is 80, what is the number?",
+            "options": ["300", "400", "500", "600"],
+            "answer": "400",
+            "topic": "Percentages",
+            "points": 10,
+            "explanation": "20% of x = 80 → x = 400"
+          }
+        ]
+      }
+    }
+  ]
+}
