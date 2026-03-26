@@ -63,8 +63,40 @@ NEXT_PUBLIC_FIREBASE_APP_ID=
 
 ## Architecture — How the Plugin System Works
 
-This is the core concept. The engine **never knows what game it's running**.
+This is the core concept. The engine **never knows what game it's running**. 
 
+### ⚠️ Important: Configs vs New Game Mechanics
+There are two ways to extend SkillArena:
+1. **Adding new configs (No code required):** Anyone can upload a JSON config to create unlimited variations of *existing* games (e.g., a new 9x9 Sudoku layout, a new word set, or a new 20-question Aptitude test). This is done entirely via JSON.
+2. **Adding new mechanics (Code required):** If you want a fundamentally new game mechanic (like a platformer, snake, or memory match), a developer must write the React Plugin (e.g., `MemoryMatchGame.jsx`) and register its `gameId` in `PluginLoader.js` *once*. After that, anyone can upload JSONs for the new game mechanic.
+
+### Flowchart
+```mermaid
+flowchart TD
+    LP["Landing Page<br/>(pick game + enter name)"] -->|"/game/{gameId}"| GS["GameShell.jsx<br/>(Timer · Score · Lives · Combo)"]
+    GS --> PL["PluginLoader.js<br/>(dynamic import by gameId)"]
+    PL --> P1["AptitudeGame.jsx"]
+    PL --> P2["WordBuilderGame.jsx"]
+    PL --> P3["SudokuGame.jsx"]
+    
+    subgraph Engine ["Engine Core (Pure JS — No React)"]
+        EC["EngineCore.js<br/>State Machine"]
+        SE["ScoreEngine.js<br/>Combo + Time Bonus"]
+        TE["TimerEngine.js"]
+        SM["sessionManager.js"]
+        LE["LeaderboardEngine.js"]
+    end
+    
+    GS --> EC
+    EC --> SE
+    EC --> SM
+    EC --> LE
+    LE --> FB["Firebase Firestore"]
+    
+    P1 & P2 & P3 -->|"onCorrect · onWrong · onComplete"| EC
+```
+
+### Request Lifecycle
 ```
 User picks "Sudoku" on landing page
          ↓
@@ -128,6 +160,8 @@ skillarena/
 │
 ├── app/
 │   ├── page.jsx                          ← Landing: pick a game + enter name → /game/{gameId}
+│   ├── layout.tsx                        ← Root layout (includes global Navbar + Auth Provider)
+│   ├── leaderboards/page.jsx             ← Global leaderboard browser
 │   ├── game/[roomId]/page.jsx            ← Engine shell (params.roomId = gameId)
 │   ├── results/page.jsx                  ← Score summary + live leaderboard
 │   ├── admin/page.jsx                    ← Upload new game JSON configs to Firestore
@@ -159,6 +193,8 @@ skillarena/
 │       └── config.json                  ← Puzzle grid + solution (meta + config.puzzles[])
 │
 ├── components/                           ← Shared UI — same across all games
+│   ├── Navbar.jsx                        ← Global auto-hiding navigation bar
+│   ├── FirebaseAuthProvider.jsx          ← Anonymous auth wrapper for Firestore rules
 │   ├── GameShell.jsx                     ← Universal wrapper: [Header: timer+score+lives+combo] + [plugin slot]
 │   ├── Timer.jsx                         ← Countdown bar (green → red when urgent, pulsing at <5s)
 │   ├── LifeBar.jsx                       ← Heart icons (animated pop-out on life loss)

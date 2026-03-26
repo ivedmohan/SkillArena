@@ -63,6 +63,61 @@ export default function AdminPage() {
     }
   }
 
+  function handleDownloadSample() {
+    const sample = {
+      meta: {
+        gameId: "sudoku",
+        gameType: "grid",
+        title: "Sudoku Custom",
+        description: "A custom 9x9 puzzle loaded via JSON.",
+        difficulty: "hard",
+        timeLimit: 300,
+        lives: 5,
+        version: "1.0"
+      },
+      config: {
+        puzzles: [
+          {
+            id: "p1",
+            difficulty: "hard",
+            pointsPerCell: 10,
+            grid: [
+              [0,0,0,0,0,0,0,0,0],
+              [0,0,0,0,0,0,0,0,0],
+              [0,0,0,0,0,0,0,0,0],
+              [0,0,0,0,0,0,0,0,0],
+              [0,0,0,0,0,0,0,0,0],
+              [0,0,0,0,0,0,0,0,0],
+              [0,0,0,0,0,0,0,0,0],
+              [0,0,0,0,0,0,0,0,0],
+              [1,2,3,4,5,6,7,8,9]
+            ],
+            solution: [
+              [9,8,7,6,5,4,3,2,1],
+              [1,2,3,4,5,6,7,8,9],
+              [9,8,7,6,5,4,3,2,1],
+              [1,2,3,4,5,6,7,8,9],
+              [9,8,7,6,5,4,3,2,1],
+              [1,2,3,4,5,6,7,8,9],
+              [9,8,7,6,5,4,3,2,1],
+              [1,2,3,4,5,6,7,8,9],
+              [1,2,3,4,5,6,7,8,9]
+            ]
+          }
+        ]
+      }
+    };
+    const blob = new Blob([JSON.stringify(sample, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "sample-game-config.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <main className="min-h-screen bg-[#0f0f1a] text-white px-4 py-12 flex flex-col items-center">
       <div className="w-full max-w-lg">
@@ -123,29 +178,57 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Config format guide */}
-        <details className="border border-[#2a2a4a] rounded-xl">
-          <summary className="px-4 py-3 text-sm text-[#8888aa] cursor-pointer hover:text-white transition-colors font-medium">
-            Config format guide
-          </summary>
-          <pre className="px-4 pb-4 text-xs text-[#8888aa] overflow-x-auto whitespace-pre-wrap font-mono leading-relaxed">
+        {/* Config format guide and download */}
+        <div className="flex flex-col gap-4">
+          <button
+            onClick={handleDownloadSample}
+            className="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#00ff88]/30 text-[#00ff88] bg-[#00ff88]/5 hover:bg-[#00ff88]/10 transition-colors font-bold text-sm"
+          >
+            ↓ Download Sample Config
+          </button>
+          
+          <details className="border border-[#2a2a4a] rounded-xl bg-[#0f0f1a]/50">
+            <summary className="px-5 py-4 text-sm text-[#8888aa] cursor-pointer hover:text-white transition-colors font-semibold flex items-center gap-2">
+              <span>📖</span> How does the Plugin System work?
+            </summary>
+            <div className="px-5 pb-5 text-sm text-[#d0d0e0] leading-relaxed border-t border-[#2a2a4a] pt-3">
+              <p className="mb-3">
+                SkillArena uses a <strong>plug-and-play architecture</strong>. The engine never hardcodes game rules. Instead:
+              </p>
+              <ul className="list-disc pl-5 space-y-2 mb-4 text-[#8888aa]">
+                <li>You upload a JSON config outlining the game variants (like puzzles or questions).</li>
+                <li>The engine reads <code className="text-[#b44fff] bg-[#b44fff]/10 px-1 rounded">meta.gameId</code> built into your JSON.</li>
+                <li>It dynamically loads the React Plugin associated with that ID from <code className="text-[#b44fff] bg-[#b44fff]/10 px-1 rounded">PluginLoader.js</code>.</li>
+              </ul>
+              <p className="text-[#ffcc00] text-xs font-mono bg-[#ffcc00]/10 p-2 rounded">
+                Currently supported gameIds: "sudoku", "word-builder", "aptitude-blitz".
+              </p>
+            </div>
+          </details>
+
+          <details className="border border-[#2a2a4a] rounded-xl">
+            <summary className="px-4 py-3 text-sm text-[#8888aa] cursor-pointer hover:text-white transition-colors font-medium">
+              View config JSON schema
+            </summary>
+            <pre className="px-4 pb-4 text-xs text-[#8888aa] overflow-x-auto whitespace-pre-wrap font-mono leading-relaxed border-t border-[#2a2a4a] pt-3">
 {`{
   "meta": {
-    "gameId":      "your-game",   // unique slug
+    "gameId":      "your-game",   // MUST match a registered plugin
     "gameType":    "mcq",         // grid | word | mcq | logic
     "title":       "My Game",
     "description": "...",
     "difficulty":  "medium",
-    "timeLimit":   120,           // seconds
-    "lives":       3,
+    "timeLimit":   120,           // total seconds for the engine
+    "lives":       3,             // mistakes allowed before Game Over
     "version":     "1.0"
   },
   "config": {
-    // game-specific data (questions, puzzles, rounds...)
+    // arbitrary data passed directly to your React plugin
   }
 }`}
-          </pre>
-        </details>
+            </pre>
+          </details>
+        </div>
 
         <div className="mt-6 text-center">
           <a href="/" className="text-xs text-[#444466] hover:text-[#8888aa] underline underline-offset-2 transition-colors">

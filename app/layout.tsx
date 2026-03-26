@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import Navbar from "../components/Navbar";
+import FirebaseAuthProvider from "../components/FirebaseAuthProvider";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -19,8 +21,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${spaceGrotesk.variable} antialiased`}>
-        {children}
+      <body className={`${spaceGrotesk.variable} antialiased min-h-screen bg-[#0f0f1a] flex flex-col`}>
+        <FirebaseAuthProvider>
+          <Navbar />
+          <div className="flex-1 flex flex-col">
+            {children}
+          </div>
+        </FirebaseAuthProvider>
       </body>
     </html>
   );

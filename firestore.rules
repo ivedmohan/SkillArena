@@ -1,0 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Default deny for anything not explicitly matched below
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ─── ADMIN UPLOADS ───────────────────────────────────────────────────
+    // Allow anyone to read game configs (needed for the engine to load games).
+    // Restricting writes securely in a serverless app without full custom claims 
+    // is tricky, but we can demand auth + require specific fields so bad data isn't pushed.
+    match /gameConfigs/{gameId} {
+      allow read: if true;
+      allow create, update: if request.auth != null
+        && request.resource.data.keys().hasAll(['meta', 'config', 'uploadedAt'])
+        && request.resource.data.meta.keys().hasAll(['gameId', 'gameType', 'title']);
+      allow delete: if false; // prevent accidental wipes
+    }
+
+    // ─── LEADERBOARD ─────────────────────────────────────────────────────
+    // Anyone can view the leaderboard scores.
+    // Only authenticated users (even anonymous) can submit a score.
+    // We validate that the submitted score contains necessary fields.
+    match /leaderboard/{gameId}/scores/{scoreId} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasAll(['playerName', 'score', 'timeTaken', 'gameId', 'createdAt'])
+        && request.resource.data.score is number
+        && request.resource.data.gameId == gameId;
+      // Scores shouldn't be edited once submitted.
+      allow update, delete: if false; 
+    }
+
+    // ─── ACTIVE SESSIONS (Legacy/Multiplayer) ────────────────────────────
+    match /sessions/{sessionId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    match /rooms/{roomId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+      
+      match /players/{playerId} {
+        allow read: if true;
+        allow write: if request.auth != null;
+      }
+    }
+    
+    match /questionSets/{setId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}
