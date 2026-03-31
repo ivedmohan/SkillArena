@@ -7,7 +7,9 @@
     "difficulty": "medium",
     "timeLimit": 90,
     "lives": 3,
-    "version": "1.0"
+    "version": "1.0",
+    "targetSkills": ["vocabulary", "pattern-recognition", "speed"],
+    "learningOutcome": "Build English vocabulary and word formation skills"
   },
   "config": {
     "rounds": [

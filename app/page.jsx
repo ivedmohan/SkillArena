@@ -12,6 +12,8 @@ const GAMES = [
     color: "#b44fff",
     glow: "rgba(180,79,255,0.3)",
     tags: ["MCQ", "15s / Q", "3 lives"],
+    skills: ["problem-solving", "numerical-aptitude", "speed"],
+    learningOutcome: "Strengthen quantitative aptitude for campus placements",
   },
   {
     id: "word-builder",
@@ -21,6 +23,8 @@ const GAMES = [
     color: "#00ff88",
     glow: "rgba(0,255,136,0.3)",
     tags: ["Word", "90s", "3 lives"],
+    skills: ["vocabulary", "pattern-recognition", "speed"],
+    learningOutcome: "Build English vocabulary and word formation skills",
   },
   {
     id: "sudoku",
@@ -30,6 +34,8 @@ const GAMES = [
     color: "#ff0099",
     glow: "rgba(255,0,153,0.3)",
     tags: ["Grid", "5 min", "3 lives"],
+    skills: ["logic", "attention-to-detail", "algorithms"],
+    learningOutcome: "Develop logical reasoning and systematic problem solving",
   },
 ];
 
@@ -137,6 +143,22 @@ export default function LandingPage() {
                 </span>
               ))}
             </div>
+            {/* Skill tags */}
+            {game.skills && (
+              <div className="flex flex-wrap gap-1 mt-2">
+                {game.skills.map(skill => (
+                  <span key={skill} className="text-[9px] px-1.5 py-0.5 rounded-full font-semibold" style={{ color: game.color, background: `${game.color}12`, border: `1px solid ${game.color}25` }}>
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            )}
+            {/* Learning outcome */}
+            {game.learningOutcome && (
+              <p className="text-[10px] text-[#666688] mt-2 leading-snug italic">
+                🎯 {game.learningOutcome}
+              </p>
+            )}
           </motion.button>
         ))}
       </div>

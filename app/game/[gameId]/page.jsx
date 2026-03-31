@@ -52,7 +52,7 @@ export default function GamePage() {
       .catch(e => setConfigError(e.message));
   }, [gameId]);
 
-  const { engine, Plugin, countdown, onCorrect, onWrong, onComplete, onTimerExpire } =
+  const { engine, Plugin, countdown, onCorrect, onWrong, onComplete, onTimerExpire, adaptive } =
     useEngineCore(playerName || null, gameConfig);
 
   const session = engine?.session;
@@ -154,6 +154,7 @@ export default function GamePage() {
         timeLimit={timeLimit}
         onTimerExpire={onTimerExpire}
         isActive={gameState === ENGINE_STATE.PLAYING}
+        adaptive={adaptive}
       >
         {Plugin && (
           <Plugin
@@ -162,6 +163,7 @@ export default function GamePage() {
             onWrong={onWrong}
             onComplete={onComplete}
             isActive={gameState === ENGINE_STATE.PLAYING}
+            adaptive={adaptive}
           />
         )}
       </GameShell>

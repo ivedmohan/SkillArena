@@ -97,5 +97,7 @@ export function useEngineCore(playerName, gameConfig) {
     setEngine(prev => prev ? handleTimerExpire(prev) : prev);
   }, []);
 
-  return { engine, Plugin, countdown, onCorrect, onWrong, onComplete, onTimerExpire };
+  const adaptive = engine?.adaptive ?? null;
+
+  return { engine, Plugin, countdown, onCorrect, onWrong, onComplete, onTimerExpire, adaptive };
 }

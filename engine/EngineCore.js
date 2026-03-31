@@ -4,9 +4,12 @@
  * State machine: IDLE → LOADING → COUNTDOWN → PLAYING → GAME_OVER → RESULTS
  *                                                 ↕
  *                                       (plugin callbacks fire here)
+ *
+ * Includes adaptive difficulty engine for real-time performance-based adjustments.
  */
 import { createSession, finalizeSession } from "./sessionManager";
 import { applyCorrect, applyWrong, isGameOver } from "./ScoreEngine";
+import { createAdaptiveState, recordAnswer } from "./AdaptiveEngine";
 
 export const ENGINE_STATE = {
   IDLE:      "IDLE",
@@ -18,10 +21,12 @@ export const ENGINE_STATE = {
 };
 
 export function createEngineState(playerName, gameConfig) {
+  const baseDifficulty = gameConfig.meta.difficulty || "medium";
   return {
     gameState: ENGINE_STATE.IDLE,
     session: createSession(playerName, gameConfig.meta.gameId, gameConfig.meta),
     config: gameConfig,
+    adaptive: createAdaptiveState(baseDifficulty),
     error: null,
   };
 }
@@ -33,14 +38,16 @@ export function transition(state, newGameState) {
 /** Called by plugin: onCorrect(rawPoints) */
 export function handleCorrect(state, rawPoints) {
   const session = applyCorrect(state.session, rawPoints);
-  return { ...state, session };
+  const adaptive = recordAnswer(state.adaptive, true);
+  return { ...state, session, adaptive };
 }
 
 /** Called by plugin: onWrong() */
 export function handleWrong(state) {
   const session = applyWrong(state.session);
+  const adaptive = recordAnswer(state.adaptive, false);
   const gameState = isGameOver(session) ? ENGINE_STATE.GAME_OVER : state.gameState;
-  return { ...state, session, gameState };
+  return { ...state, session, adaptive, gameState };
 }
 
 /** Called by plugin: onComplete() */

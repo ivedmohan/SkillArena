@@ -39,6 +39,7 @@ body {
 .text-gradient {
   background: linear-gradient(135deg, #fff 0%, #8888aa 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -76,3 +77,35 @@ body {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-primary); }
 ::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+
+/* ── Digital Board / Large Screen Optimizations ── */
+@media (min-width: 1920px) {
+  html { font-size: 18px; }
+  
+  button, [role="button"] {
+    min-height: 56px;
+    min-width: 56px;
+  }
+  
+  .glass-panel {
+    padding: 2rem;
+    border-radius: 1.5rem;
+  }
+}
+
+@media (min-width: 2560px) {
+  html { font-size: 22px; }
+}
+
+/* Fullscreen mode — scales up for interactive boards */
+.fullscreen-mode {
+  font-size: 1.15rem;
+}
+.fullscreen-mode button,
+.fullscreen-mode [role="button"] {
+  min-height: 56px;
+  font-size: 1.1em;
+}
+.fullscreen-mode .glass-panel {
+  padding: 2rem;
+}

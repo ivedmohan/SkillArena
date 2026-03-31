@@ -1,14 +1,15 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { isCorrect, calcPoints } from "./aptitudeLogic";
 import { useTimer } from "../../hooks/useTimer";
 import { GAME_CONFIG } from "../../constants/gameConfig";
+import { getTimeAdjustment, getQuestionDifficultyFilter } from "../../engine/AdaptiveEngine";
 
 const LABELS = ["A", "B", "C", "D"];
 
 /**
- * AptitudeGame — MCQ plugin.
+ * AptitudeGame — MCQ plugin with adaptive difficulty support.
  *
  * Plugin interface:
  *   config      — game config.json data
@@ -16,16 +17,21 @@ const LABELS = ["A", "B", "C", "D"];
  *   onWrong     — () => void
  *   onComplete  — () => void
  *   isActive    — false = freeze UI
+ *   adaptive    — adaptive difficulty state (optional)
  */
-export default function AptitudeGame({ config, onCorrect, onWrong, onComplete, isActive }) {
+export default function AptitudeGame({ config, onCorrect, onWrong, onComplete, isActive, adaptive }) {
   const [qIndex, setQIndex] = useState(0);
   const [selected, setSelected] = useState(null);
   const [revealed, setRevealed] = useState(false);
-  const [timerKey, setTimerKey] = useState(0); // increment to reset timer
+  const [timerKey, setTimerKey] = useState(0);
 
   const questions = config.config.questions;
   const currentQ = questions[qIndex];
-  const timePerQ = config.meta.timePerQuestion ?? 15;
+  const baseTimePerQ = config.meta.timePerQuestion ?? 15;
+
+  // Apply adaptive time adjustment
+  const timeAdjust = adaptive ? getTimeAdjustment(adaptive) : 0;
+  const timePerQ = Math.max(5, baseTimePerQ + timeAdjust); // min 5 seconds
 
   const handleTimeout = useCallback(() => {
     if (revealed || !isActive) return;
@@ -64,11 +70,25 @@ export default function AptitudeGame({ config, onCorrect, onWrong, onComplete, i
     scheduleNext();
   }
 
+  // Determine question difficulty badge color
+  const qDifficulty = currentQ.difficulty;
+  const diffColor = qDifficulty === "hard" ? "#ff0099" : qDifficulty === "easy" ? "#00ff88" : "#ffcc00";
+
   return (
     <div className="flex flex-col h-full p-4 gap-4 max-w-2xl mx-auto w-full">
       {/* Progress */}
       <div className="flex items-center justify-between text-xs text-[#8888aa] font-mono">
-        <span className="uppercase tracking-widest">{currentQ.topic}</span>
+        <div className="flex items-center gap-2">
+          <span className="uppercase tracking-widest">{currentQ.topic}</span>
+          {qDifficulty && (
+            <span
+              className="text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase"
+              style={{ color: diffColor, background: `${diffColor}15`, border: `1px solid ${diffColor}30` }}
+            >
+              {qDifficulty}
+            </span>
+          )}
+        </div>
         <span>{qIndex + 1} / {questions.length}</span>
       </div>
 
@@ -80,6 +100,15 @@ export default function AptitudeGame({ config, onCorrect, onWrong, onComplete, i
           transition={{ ease: "linear", duration: 1 }}
         />
       </div>
+
+      {/* Adaptive time indicator */}
+      {timeAdjust !== 0 && (
+        <div className="flex justify-end">
+          <span className={`text-[9px] font-bold ${timeAdjust > 0 ? "text-[#00ff88]" : "text-[#ff0099]"}`}>
+            {timeAdjust > 0 ? `+${timeAdjust}s (adaptive)` : `${timeAdjust}s (adaptive)`}
+          </span>
+        </div>
+      )}
 
       {/* Question + options */}
       <AnimatePresence mode="wait">

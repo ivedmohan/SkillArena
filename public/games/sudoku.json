@@ -7,7 +7,9 @@
     "difficulty": "easy",
     "timeLimit": 300,
     "lives": 3,
-    "version": "1.0"
+    "version": "1.0",
+    "targetSkills": ["logic", "attention-to-detail", "algorithms"],
+    "learningOutcome": "Develop logical reasoning and systematic problem solving"
   },
   "config": {
     "puzzles": [
