@@ -3,9 +3,21 @@
 > **TaPTaP Game Engine Hackathon 2026 — League 1: Engine League**
 > Theme: *Gamify Learning. Amplify Employability.*
 
-SkillArena is a **plugin-based game engine** built on Next.js 16 + Firebase. It loads any game from a JSON config, renders it inside a universal game shell, and handles timer, scoring, combo system, and leaderboard identically across all games. Think of it like a **game console** — the console stays the same, the cartridge (JSON + plugin) changes.
+SkillArena is a **dynamic, AI-powered plugin game engine** built on Next.js 16 + Firebase. It acts as a universal game console that loads any game from a JSON configuration file. It renders the game inside a universal shell that handles timers, scoring math, combo systems, and leaderboards identically across all plugins. 
 
-**Ships with 3 mandatory games:** SudokuBlitz · WordBuilder · AptitudeBlitz
+**Ships with 3 mandatory base games:** SudokuBlitz · WordBuilder · AptitudeBlitz
+
+---
+
+## 🌟 Advanced Engine Features (New in v2.0)
+
+We have massively upgraded the engine to go beyond basic JSON configs, hitting all core technical requirements for the TapTap Engine League:
+
+1. 🤖 **AI-Powered "Zero-Code" Generation (Gemini 2.5 Flash):** Type a topic (e.g. "Advanced SQL") and the engine calls the Gemini API to instantly generate a fully playable, balanced JSON game config.
+2. 🌍 **Creator Ecosystem & Hub:** Whether an AI generates the game or a user manually uploads a custom `.json` config file, the engine assigns it a **custom URL slug** (e.g., `/game/sql-test`) and its own deeply isolated real-time leaderboard. The homepage dynamically queries the database and promotes community-generated games on a global feed!
+3. 🧠 **Adaptive Difficulty Engine:** A pure JS `AdaptiveEngine` tracks a rolling window of player accuracy. If a player is answering too quickly/accurately, the engine dynamically tightens their time limits and passes an `adaptive` boolean to the UI layer to render "Difficulty UP" events.
+4. 🖥️ **Digital Board / Fullscreen Mode:** Fully responsive, scaled UI targets (1920px+ and 2560px+) designed for interactive smartboards. Click the new `[ ]` Fullscreen toggle on any game to instantly expand it for classroom presentation.
+5. 🎯 **Skill Tagging & Taxonomy:** Every game config now maps directly to explicit cognitive skills and Learning Outcomes displayed natively on the game library.
 
 ---
 
@@ -150,6 +162,8 @@ Every game plugin receives exactly these props from GameShell. That's the entire
 ```
 
 The plugin computes its own base points + time bonus and passes them to `onCorrect(pts)`. The engine applies the **combo multiplier** on top. This way the plugin owns its timing logic and the engine owns the global scoring math.
+
+Furthermore, plugins can map into the global `adaptive` state passed down by the Engine, allowing plugins to restrict local timers or elevate visual pressure dynamically when the user is performing too well.
 
 ---
 

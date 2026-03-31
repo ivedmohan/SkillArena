@@ -258,8 +258,7 @@ export default function LandingPage() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
         onClick={handlePlay}
-        disabled={!selected || !name.trim()}
-        className="px-12 py-4 rounded-xl bg-gradient-to-r from-[#00ff88] to-[#00cc6a] text-[#0f0f1a] font-black text-lg tracking-wide uppercase transition-all duration-200 hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(0,255,136,0.4)] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
+        className="px-12 py-4 rounded-xl bg-gradient-to-r from-[#00ff88] to-[#00cc6a] text-[#0f0f1a] font-black text-lg tracking-wide uppercase transition-all duration-200 hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(0,255,136,0.4)] active:scale-[0.98]"
       >
         Play Now →
       </motion.button>
