@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { getCommunityGames } from "../lib/firestoreHelpers";
 
 const GAMES = [
   {
@@ -51,6 +52,11 @@ export default function LandingPage() {
   const [selected, setSelected] = useState(null);
   const [difficulty, setDifficulty] = useState("easy");
   const [error, setError] = useState("");
+  const [communityGames, setCommunityGames] = useState([]);
+
+  useEffect(() => {
+    getCommunityGames(6).then(setCommunityGames).catch(console.error);
+  }, []);
 
   function handlePlay() {
     if (!name.trim()) { setError("Enter your name first!"); return; }
@@ -162,6 +168,59 @@ export default function LandingPage() {
           </motion.button>
         ))}
       </div>
+
+      {/* Community AI Games */}
+      <AnimatePresence>
+        {communityGames.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            className="w-full max-w-3xl mb-8"
+          >
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-xl">✨</span>
+              <h3 className="text-sm font-bold text-white uppercase tracking-widest">Community AI Games</h3>
+              <div className="flex-1 h-px bg-[#2a2a4a]/50" />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {communityGames.map((game, i) => (
+                <motion.button
+                  key={game.dbId}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + i * 0.05 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => { setSelected(game.dbId); setError(""); }}
+                  className={`relative text-left p-4 rounded-xl border transition-all duration-200 flex justify-between items-center ${
+                    selected === game.dbId
+                      ? "border-[#ffcc00] bg-[#ffcc00]/10 shadow-[0_0_20px_rgba(255,204,0,0.2)]"
+                      : "border-[#2a2a4a] bg-[#ffffff02] hover:border-[#444466] hover:bg-[#ffffff05]"
+                  }`}
+                >
+                  {selected === game.dbId && (
+                    <span className="absolute -top-2 -right-2 text-[9px] font-black px-2 py-0.5 rounded-full bg-[#ffcc00] text-[#0f0f1a]">
+                      SELECTED
+                    </span>
+                  )}
+                  <div>
+                    <h4 className="font-bold text-white text-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
+                      {game.meta?.title || "Custom Game"}
+                    </h4>
+                    <p className="text-[10px] text-[#8888aa] mt-0.5 font-mono">
+                      by <span className="text-[#00ff88]">{game.meta?.author || "Anonymous"}</span>
+                    </p>
+                  </div>
+                  <div className="text-[10px] uppercase font-bold text-[#b44fff] bg-[#b44fff]/10 px-2 py-1 rounded-full">
+                    {game.meta?.gameType}
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Difficulty selector */}
       <motion.div

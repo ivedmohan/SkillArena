@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { saveGameConfig } from "../../lib/firestoreHelpers";
 
@@ -43,6 +43,19 @@ export default function AdminPage() {
   const [needsKey, setNeedsKey] = useState(false);
   const [userApiKey, setUserApiKey] = useState("");
 
+  // ── Custom Meta state for saving ──
+  const [author, setAuthor] = useState("");
+  const [slug, setSlug] = useState("");
+
+  // Auto-generate slug when preview is set
+  useEffect(() => {
+    if (preview && !slug) {
+      const base = preview.meta.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
+      setSlug(`${base}-${Math.floor(Math.random() * 1000)}`);
+    }
+  }, [preview]);
+
+
   // ── Manual upload logic ──
   function validateConfig(data) {
     if (!data.meta) return "Missing required field: meta";
@@ -79,10 +92,20 @@ export default function AdminPage() {
 
   async function handleUpload() {
     if (!preview) return;
+    if (!slug.trim()) { setValidationError("Custom URL Slug is required."); return; }
+    
     setUploading(true);
     setValidationError("");
     try {
-      await saveGameConfig(preview.meta.gameId, preview);
+      const finalConfig = {
+        ...preview,
+        meta: {
+          ...preview.meta,
+          author: author.trim() || "Anonymous",
+        }
+      };
+      // Save it under the custom unique slug instead of the plugin gameId
+      await saveGameConfig(slug.trim(), finalConfig);
       setSuccessMsg(`✓ Config for "${preview.meta.title}" uploaded successfully!`);
       setPreview(null);
       if (fileRef.current) fileRef.current.value = "";
@@ -428,6 +451,31 @@ export default function AdminPage() {
                   </div>
                 </details>
               )}
+
+              {/* Custom Meta Fields for Saving */}
+              <div className="mt-4 pt-4 border-t border-[#2a2a4a] space-y-3">
+                <div>
+                  <label className="block text-[10px] font-bold text-[#8888aa] uppercase tracking-wider mb-1">Custom URL Slug</label>
+                  <input
+                    type="text"
+                    value={slug}
+                    onChange={e => setSlug(e.target.value)}
+                    placeholder="e.g. my-cool-game"
+                    className="w-full bg-[#0f0f1a] border border-[#2a2a4a] text-white p-2 rounded-lg focus:outline-none focus:border-[#00ff88] text-xs font-mono"
+                  />
+                  <p className="text-[#444466] text-[9px] mt-1 ml-1">Players will access this game at /game/{slug || "..."}</p>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-[#8888aa] uppercase tracking-wider mb-1">Author Name (Optional)</label>
+                  <input
+                    type="text"
+                    value={author}
+                    onChange={e => setAuthor(e.target.value)}
+                    placeholder="e.g. Creator123"
+                    className="w-full bg-[#0f0f1a] border border-[#2a2a4a] text-white p-2 rounded-lg focus:outline-none focus:border-[#00ff88] text-xs"
+                  />
+                </div>
+              </div>
 
               <button
                 onClick={handleUpload}

@@ -170,8 +170,8 @@ export default function WordBuilderGame({ config, onCorrect, onWrong, onComplete
       )}
 
       {/* Bonus words hint */}
-      <div className="text-center text-xs text-[#444466]">
-        Bonus words: {round.bonusWords.join(", ")}
+      <div className="text-center text-[10px] text-[#444466] uppercase tracking-widest font-bold">
+        Find {round.bonusWords?.length || 0} hidden bonus words for extra points!
       </div>
     </div>
   );

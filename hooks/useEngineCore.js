@@ -18,7 +18,7 @@ import { GAME_CONFIG } from "../constants/gameConfig";
  * @param {string} playerName
  * @param {object|null} gameConfig  — full config.json object (meta + config)
  */
-export function useEngineCore(playerName, gameConfig) {
+export function useEngineCore(playerName, gameConfig, gameSlug) {
   const [engine, setEngine] = useState(null);
   const [Plugin, setPlugin] = useState(null);
   const [countdown, setCountdown] = useState(GAME_CONFIG.COUNTDOWN_BEFORE_START);
@@ -32,7 +32,7 @@ export function useEngineCore(playerName, gameConfig) {
     const init = async () => {
       // LOADING state
       setEngine({
-        ...createEngineState(playerName, gameConfig),
+        ...createEngineState(playerName, gameConfig, gameSlug),
         gameState: ENGINE_STATE.LOADING,
       });
 

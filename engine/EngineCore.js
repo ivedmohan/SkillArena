@@ -20,11 +20,12 @@ export const ENGINE_STATE = {
   RESULTS:   "RESULTS",
 };
 
-export function createEngineState(playerName, gameConfig) {
+export function createEngineState(playerName, gameConfig, gameSlug) {
   const baseDifficulty = gameConfig.meta.difficulty || "medium";
+  const sessionDbId = gameSlug || gameConfig.meta.gameId; // If we ran this from a custom URL, use it!
   return {
     gameState: ENGINE_STATE.IDLE,
-    session: createSession(playerName, gameConfig.meta.gameId, gameConfig.meta),
+    session: createSession(playerName, sessionDbId, gameConfig.meta),
     config: gameConfig,
     adaptive: createAdaptiveState(baseDifficulty),
     error: null,

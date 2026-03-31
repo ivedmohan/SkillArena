@@ -65,7 +65,7 @@ export default function GamePage() {
   }, [gameId]);
 
   const { engine, Plugin, countdown, onCorrect, onWrong, onComplete, onTimerExpire, adaptive } =
-    useEngineCore(playerName || null, gameConfig);
+    useEngineCore(playerName || null, gameConfig, gameId);
 
   const session = engine?.session;
   const gameState = engine?.gameState;
