@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { getGameConfig } from "../../../lib/firestoreHelpers";
 import { useEngineCore } from "../../../hooks/useEngineCore";
 import { ENGINE_STATE } from "../../../engine/EngineCore";
 import { GAME_CONFIG } from "../../../constants/gameConfig";
@@ -30,17 +31,24 @@ export default function GamePage() {
     setPlayerName(name);
   }, []);
 
-  // Fetch game config from public/games/{gameId}.json, apply difficulty override
+  // Fetch game config from Firestore first, fallback to public/games/{gameId}.json
   useEffect(() => {
     if (!gameId) return;
-    fetch(`/games/${gameId}.json`)
-      .then(r => {
-        if (!r.ok) throw new Error(`Config not found for "${gameId}"`);
-        return r.json();
-      })
-      .then(cfg => {
+
+    async function loadConfig() {
+      try {
+        // 1. Try Firestore
+        let cfg = await getGameConfig(gameId);
+
+        // 2. Fallback to Local JSON
+        if (!cfg) {
+          const res = await fetch(`/games/${gameId}.json`);
+          if (!res.ok) throw new Error(`Config not found for "${gameId}"`);
+          cfg = await res.json();
+        }
+
         const diff = sessionStorage.getItem("difficulty") ?? "easy";
-        // For sudoku: set timeLimit from the matching puzzle's timeLimit
+        // For grid games: set timeLimit from the matching puzzle's timeLimit
         if (cfg.meta.gameType === "grid") {
           const puzzle = cfg.config.puzzles?.find(p => p.difficulty === diff) ?? cfg.config.puzzles?.[0];
           cfg = { ...cfg, meta: { ...cfg.meta, difficulty: diff, timeLimit: puzzle?.timeLimit ?? cfg.meta.timeLimit } };
@@ -48,8 +56,12 @@ export default function GamePage() {
           cfg = { ...cfg, meta: { ...cfg.meta, difficulty: diff } };
         }
         setGameConfig(cfg);
-      })
-      .catch(e => setConfigError(e.message));
+      } catch (e) {
+        setConfigError(e.message);
+      }
+    }
+
+    loadConfig();
   }, [gameId]);
 
   const { engine, Plugin, countdown, onCorrect, onWrong, onComplete, onTimerExpire, adaptive } =

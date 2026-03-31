@@ -32,21 +32,23 @@ export async function POST(req) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-2.5-flash",
+      generationConfig: { responseMimeType: "application/json" } // Force clean JSON from Gemini
+    });
 
     const prompt = buildPrompt(gameType, topic, difficulty, questionCount ?? 10);
 
     const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    let text = result.response.text();
+    text = text.replace(/```(?:json)?\s*([\s\S]*?)```/, '$1').trim(); // Ensure no backticks just in case
 
-    // Extract JSON from the response (handles markdown code fences)
-    const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/) || [null, text];
     let config;
     try {
-      config = JSON.parse(jsonMatch[1].trim());
-    } catch {
-      // Try the full text if regex didn't work
-      config = JSON.parse(text.trim());
+      config = JSON.parse(text);
+    } catch (parseErr) {
+      console.error("Failed to parse AI JSON:", text.substring(0, 100));
+      return Response.json({ error: "AI generated invalid JSON. Please try again." }, { status: 500 });
     }
 
     // Validate the generated config
