@@ -182,6 +182,39 @@ OUTPUT EXACTLY this JSON structure (no extra text):
 Make sure the letter tiles in each round can actually form the bonus words. Use 10-12 letters per round. Return ONLY the JSON.`;
   }
 
+  if (gameType === "memory") {
+    return `You are a game config generator for an educational game engine. Generate a JSON config for a visual Memory Match game.
+
+REQUIREMENTS:
+- Topic/Theme: ${topic}
+- Difficulty: ${difficulty}
+- Generate an array of 8 unique but highly thematic Emojis based on the topic.
+
+OUTPUT EXACTLY this JSON structure (no extra text):
+\`\`\`json
+{
+  "meta": {
+    "gameId": "memory-match",
+    "gameType": "memory",
+    "title": "AI: ${topic} Memory",
+    "description": "AI-generated spatial visual challenge",
+    "difficulty": "${difficulty}",
+    "timeLimit": 60,
+    "lives": "infinite",
+    "version": "1.0",
+    "targetSkills": ["spatial-memory", "pattern-recognition", "focus"],
+    "learningOutcome": "Enhance spatial recall using ${topic} themes",
+    "aiGenerated": true
+  },
+  "config": {
+    "pairs": ["🚀", "🛸", "🌍", "🌙", "☄️", "🛰️", "👨‍🚀", "🔭"]
+  }
+}
+\`\`\`
+
+Pick 8 unique Emojis that perfectly match the theme "${topic}". Return ONLY the JSON.`;
+  }
+
   // Default / logic type
   return `You are a game config generator for an educational game engine. Generate a JSON config for an MCQ logic/reasoning game.
 

@@ -7,6 +7,7 @@ const GAME_TYPES = [
   { id: "mcq", label: "MCQ / Aptitude", icon: "🧠" },
   { id: "word", label: "Word Builder", icon: "📝" },
   { id: "logic", label: "Logic / Reasoning", icon: "🔮" },
+  { id: "memory", label: "Memory Match / Visual", icon: "🃏" },
 ];
 
 const DIFFICULTIES = [
@@ -159,30 +160,7 @@ export default function AdminPage() {
     }
   }
 
-  function handleDownloadSample() {
-    const sample = {
-      meta: {
-        gameId: "sudoku", gameType: "grid", title: "Sudoku Custom",
-        description: "A custom 9x9 puzzle loaded via JSON.",
-        difficulty: "hard", timeLimit: 300, lives: 5, version: "1.0",
-        targetSkills: ["logic", "attention-to-detail"],
-        learningOutcome: "Develop logical reasoning and systematic problem solving",
-      },
-      config: {
-        puzzles: [{
-          id: "p1", difficulty: "hard", pointsPerCell: 10,
-          grid: Array(9).fill(Array(9).fill(0)),
-          solution: Array(9).fill(Array(9).fill(0)),
-        }],
-      },
-    };
-    const blob = new Blob([JSON.stringify(sample, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = "sample-game-config.json";
-    document.body.appendChild(a); a.click();
-    document.body.removeChild(a); URL.revokeObjectURL(url);
-  }
+  // Native HTML5 download links are now used instead of manual Blob generation
 
   return (
     <main className="min-h-screen bg-[#0f0f1a] text-white px-4 py-12 flex flex-col items-center">
@@ -452,6 +430,20 @@ export default function AdminPage() {
                 </details>
               )}
 
+              {/* Memory Match Pairs Preview */}
+              {preview.config?.pairs && (
+                <div className="mt-4 border-t border-[#2a2a4a] pt-4">
+                  <h4 className="text-xs text-[#8888aa] font-semibold mb-2">Generated Emojis ({preview.config.pairs.length})</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {preview.config.pairs.map((emoji, i) => (
+                      <div key={i} className="w-10 h-10 flex items-center justify-center text-xl bg-[#0f0f1a] border border-[#2a2a4a] rounded-lg shadow-sm">
+                        {emoji}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Custom Meta Fields for Saving */}
               <div className="mt-4 pt-4 border-t border-[#2a2a4a] space-y-3">
                 <div>
@@ -516,12 +508,24 @@ export default function AdminPage() {
 
         {/* Config format guide and download */}
         <div className="flex flex-col gap-4">
-          <button
-            onClick={handleDownloadSample}
-            className="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#00ff88]/30 text-[#00ff88] bg-[#00ff88]/5 hover:bg-[#00ff88]/10 transition-colors font-bold text-sm"
-          >
-            ↓ Download Sample Config
-          </button>
+          {/* JSON Templates */}
+          <div className="flex flex-col gap-2">
+            <span className="text-[10px] text-[#8888aa] uppercase tracking-widest font-bold">Download JSON Templates</span>
+            <div className="grid grid-cols-2 gap-2">
+              <a href="/games/aptitude-blitz.json" download className="flex items-center justify-center gap-2 py-2 rounded-lg border border-[#b44fff]/30 text-[#b44fff] bg-[#b44fff]/5 hover:bg-[#b44fff]/10 transition-colors text-xs font-bold">
+                ↓ AptitudeBlitz
+              </a>
+              <a href="/games/word-builder.json" download className="flex items-center justify-center gap-2 py-2 rounded-lg border border-[#00ff88]/30 text-[#00ff88] bg-[#00ff88]/5 hover:bg-[#00ff88]/10 transition-colors text-xs font-bold">
+                ↓ WordBuilder
+              </a>
+              <a href="/games/sudoku.json" download className="flex items-center justify-center gap-2 py-2 rounded-lg border border-[#ff0099]/30 text-[#ff0099] bg-[#ff0099]/5 hover:bg-[#ff0099]/10 transition-colors text-xs font-bold">
+                ↓ SudokuBlitz
+              </a>
+              <a href="/games/memory-match.json" download className="flex items-center justify-center gap-2 py-2 rounded-lg border border-[#ffcc00]/30 text-[#ffcc00] bg-[#ffcc00]/5 hover:bg-[#ffcc00]/10 transition-colors text-xs font-bold">
+                ↓ MemoryMatch
+              </a>
+            </div>
+          </div>
 
           <details className="border border-[#2a2a4a] rounded-xl bg-[#0f0f1a]/50">
             <summary className="px-5 py-4 text-sm text-[#8888aa] cursor-pointer hover:text-white transition-colors font-semibold flex items-center gap-2">

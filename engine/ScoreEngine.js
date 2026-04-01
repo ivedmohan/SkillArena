@@ -42,7 +42,7 @@ export function applyCorrect(session, rawPoints) {
 export function applyWrong(session) {
   return {
     ...session,
-    lives: session.lives - 1,
+    lives: typeof session.lives === "number" ? session.lives - 1 : session.lives,
     streak: 0,
     multiplier: 1.0,
     lastPointsEarned: 0,
@@ -50,5 +50,5 @@ export function applyWrong(session) {
 }
 
 export function isGameOver(session) {
-  return session.lives <= 0;
+  return typeof session.lives === "number" && session.lives <= 0;
 }

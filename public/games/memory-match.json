@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "gameId": "memory-match",
+    "gameType": "memory",
+    "title": "Hackathon Match",
+    "category": "Visual Logic",
+    "difficulty": "medium",
+    "version": "1.0",
+    "timeLimit": 60,
+    "lives": "infinite",
+    "targetSkills": ["spatial-memory", "pattern-recognition", "focus"],
+    "learningOutcome": "Strengthen visual short-term memory through spatial challenges"
+  },
+  "config": {
+    "pairs": ["💻", "🚀", "🐛", "🔐", "🤖", "🍕"]
+  }
+}

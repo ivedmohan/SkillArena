@@ -38,6 +38,17 @@ const GAMES = [
     skills: ["logic", "attention-to-detail", "algorithms"],
     learningOutcome: "Develop logical reasoning and systematic problem solving",
   },
+  {
+    id: "memory-match",
+    title: "MemoryMatch",
+    description: "Flip cards and find the hidden pairs before time runs out.",
+    icon: "🃏",
+    color: "#ffcc00",
+    glow: "rgba(255,204,0,0.3)",
+    tags: ["Visual", "60s", "3 lives"],
+    skills: ["spatial-memory", "pattern-recognition", "focus"],
+    learningOutcome: "Strengthen visual short-term memory through spatial challenges",
+  },
 ];
 
 const DIFFICULTIES = [
@@ -217,6 +228,15 @@ export default function LandingPage() {
                   </div>
                 </motion.button>
               ))}
+            </div>
+
+            <div className="mt-6 flex justify-center">
+              <button
+                onClick={() => router.push("/community")}
+                className="text-xs font-bold text-[#b44fff] border border-[#b44fff]/50 px-6 py-2.5 rounded-full hover:bg-[#b44fff]/10 hover:shadow-[0_0_15px_rgba(180,79,255,0.2)] transition-all flex items-center gap-2"
+              >
+                Browse All Community Games <span>→</span>
+              </button>
             </div>
           </motion.div>
         )}

@@ -9,6 +9,7 @@ const PLUGIN_REGISTRY = {
   "aptitude-blitz": () => import("../plugins/aptitude-blitz/AptitudeGame"),
   "word-builder":   () => import("../plugins/word-builder/WordBuilderGame"),
   "sudoku":         () => import("../plugins/sudoku/SudokuGame"),
+  "memory-match":   () => import("../plugins/memory-match/MemoryMatchGame"),
 };
 
 export function getRegisteredGameIds() {
