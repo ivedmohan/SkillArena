@@ -122,6 +122,11 @@ export default function AptitudeGame({ config, onCorrect, onWrong, onComplete, i
           {/* Question text */}
           <div className="glass-panel rounded-2xl p-5 text-base md:text-lg font-semibold leading-relaxed text-white border border-white/5">
             {currentQ.question}
+            {currentQ.imageUrl && (
+              <div className="mt-4 rounded-xl overflow-hidden border border-[#2a2a4a]">
+                <img src={currentQ.imageUrl} alt="Question image" className="w-full max-h-48 object-cover hover:object-contain bg-black/50" />
+              </div>
+            )}
           </div>
 
           {/* Options */}

@@ -67,7 +67,7 @@ export default function LandingPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden">
+    <main className="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative overflow-x-hidden">
       {/* Background blobs */}
       <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#00ff88] rounded-full blur-[140px] opacity-[0.06]" />
