@@ -7,6 +7,7 @@ const GAMES = [
   { id: "aptitude-blitz", title: "AptitudeBlitz", icon: "🧠", color: "#b44fff" },
   { id: "word-builder", title: "WordBuilder", icon: "📝", color: "#00ff88" },
   { id: "sudoku", title: "SudokuBlitz", icon: "🔢", color: "#ff0099" },
+  { id: "memory-match", title: "VisualMatch", icon: "🃏", color: "#ffcc00" },
 ];
 
 export default function LeaderboardsPage() {
